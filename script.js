@@ -53,21 +53,54 @@ document.addEventListener('DOMContentLoaded', () => {
     const previewImg = document.getElementById('preview-img');
     const workItems = document.querySelectorAll('.work-item a');
 
-    if (previewImg && workItems.length > 0) {
+    if (workItems.length > 0) {
         workItems.forEach(item => {
+            // Desktop Hover
             item.addEventListener('mouseenter', () => {
-                const newSrc = item.getAttribute('data-img');
-                if(newSrc) {
-                    // Fade in and zoom
-                    previewImg.src = newSrc;
-                    previewImg.style.opacity = '1';
-                    previewImg.style.transform = 'scale(1.05)';
+                if(window.innerWidth > 768 && previewImg) { // Check for desktop
+                    const newSrc = item.getAttribute('data-img');
+                    if(newSrc) {
+                        previewImg.src = newSrc;
+                        previewImg.style.opacity = '1';
+                        previewImg.style.transform = 'scale(1.05)';
+                    }
                 }
             });
             item.addEventListener('mouseleave', () => {
-                // Fade out and reset zoom
-                previewImg.style.opacity = '0';
-                previewImg.style.transform = 'scale(1)';
+                if(window.innerWidth > 768 && previewImg) { // Check for desktop
+                    previewImg.style.opacity = '0';
+                    previewImg.style.transform = 'scale(1)';
+                }
+            });
+
+            // Mobile Click Handling (Toggle Preview)
+            item.addEventListener('click', (e) => {
+                if(window.innerWidth <= 768) {
+                    e.preventDefault(); // Prevent navigation on mobile too if needed, though disabled-link handles it mostly
+                    
+                    // Find or Create Mobile Preview Container for THIS item
+                    // Check if preview already exists
+                    let mobilePreview = item.parentNode.querySelector('.mobile-preview');
+                    
+                    if (!mobilePreview) {
+                        // Create it
+                        mobilePreview = document.createElement('div');
+                        mobilePreview.className = 'mobile-preview';
+                        const img = document.createElement('img');
+                        img.src = item.getAttribute('data-img');
+                        mobilePreview.appendChild(img);
+                        item.parentNode.appendChild(mobilePreview);
+                    }
+
+                    // Toggle Visibility
+                    if (mobilePreview.classList.contains('active')) {
+                        mobilePreview.classList.remove('active');
+                    } else {
+                        // Close others? Optional. Let's close others for cleaner UI.
+                        document.querySelectorAll('.mobile-preview').forEach(el => el.classList.remove('active'));
+                        mobilePreview.classList.add('active');
+                    }
+                }
             });
         });
     }

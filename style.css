@@ -671,8 +671,30 @@ a.disabled-link {
         height: auto;
     }
     .preview-container {
-        display: none; /* Hide preview on mobile for simplicity */
+        display: none; /* Hide desktop preview */
     }
+    
+    /* Mobile Image Preview - Hidden by default, shown via JS */
+    .mobile-preview {
+        display: none;
+        width: 100%;
+        aspect-ratio: 4/3;
+        margin-top: 1rem;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    
+    .mobile-preview.active {
+        display: block;
+        animation: fadeIn 0.3s ease;
+    }
+    
+    .mobile-preview img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
     .list-container {
         width: 100%;
         padding: 2rem;
@@ -681,6 +703,11 @@ a.disabled-link {
         grid-template-columns: 1fr;
         gap: 0.5rem;
     }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 /* Page Transitions */
